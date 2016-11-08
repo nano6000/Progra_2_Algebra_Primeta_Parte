@@ -5,6 +5,8 @@
  */
 package Capa_Logica;
 
+import java.util.Arrays;
+
 /**
  *
  * @author esteb
@@ -19,6 +21,51 @@ public class Matriz {
     
     public Matriz(int i) {
         this.matriz = new double[i][i];
+    }
+    
+    /***
+     * Crea la matriz por defecto, tamano 3x3
+     */
+    public Matriz() {
+        this.matriz = new double[3][3];
+    }
+    
+    public void insertElem(int i, int j, double elem)
+    {
+        this.matriz[i][j] = elem;
+    }
+
+    @Override
+    public String toString() 
+    {
+        String result = "";
+        for (double[] fila : matriz) {
+            result += Arrays.toString(fila) + "\n";
+        }
+        return result;
+    }
+    
+    public double[] getFila(int i)
+    {
+        return matriz[i];
+    }
+    
+    public int getSize()
+    {
+        return matriz.length;
+    }
+    
+    public Matriz clone()
+    {
+        Matriz clon = new Matriz(matriz.length, matriz[0].length);
+        for (int i = 0; i < matriz.length; i++) 
+        {
+            for (int j = 0; j < matriz[i].length; j++) 
+            {
+                clon.insertElem(i, j, matriz[i][j]);
+            }
+        }
+        return clon;
     }
     
     /***
@@ -43,7 +90,7 @@ public class Matriz {
             }
         } else {
             //System.out.print("determinante = " + (matriz[0][0]*matriz[1][1] -(matriz[0][1]*matriz[1][0])) + "\n");
-            System.out.println("len matriz: " + matriz.length + "\n");
+            //System.out.println("len matriz: " + matriz.length + "\n");
             return (matriz[0][0] * matriz[1][1] - (matriz[0][1] * matriz[1][0]));
         }
         return determinante;
@@ -58,17 +105,17 @@ public class Matriz {
         if (n > 2) {
             for (int i = 0; i < n; i++) {
                 if (i % 2 == 0) {
-                    determinante += cofactor[0][i] * determinanteAux(Cofactor(cofactor, i, 0));
+                    determinante += cofactor[0][i] * determinanteAux(Cofactor(cofactor, 0, i));
                     //System.out.print("+curr det:" + determinante +"\n");
                 } else {
-                    determinante -= cofactor[0][i] * determinanteAux(Cofactor(cofactor, i, 0));
+                    determinante -= cofactor[0][i] * determinanteAux(Cofactor(cofactor, 0, i));
                     //System.out.print("curr det:" + determinante +"\n");
                 }
             }
         } else {
             //System.out.print("determinante = " + (matriz[0][0]*matriz[1][1] -(matriz[0][1]*matriz[1][0])) + "\n");
-            System.out.println("len matriz: " + matriz.length + "\n");
-            return (matriz[0][0] * matriz[1][1] - (matriz[0][1] * matriz[1][0]));
+            //System.out.println("len matrizwmxlkwmsx: " + cofactor.length + "\n");
+            return (cofactor[0][0] * cofactor[1][1] - (cofactor[0][1] * cofactor[1][0]));
         }
         return determinante;
     }
@@ -110,4 +157,6 @@ public class Matriz {
         //printMatriz(subArr);
         return subArr;
     }
+    
+    
 }
