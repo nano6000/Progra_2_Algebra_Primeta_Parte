@@ -5,6 +5,7 @@
  */
 package Capa_Grafica;
 
+import static Capa_Logica.Inversa.matrizInversa;
 import Capa_Logica.Matriz;
 import Capa_Logica.OpMatricial;
 import java.awt.event.KeyEvent;
@@ -23,6 +24,8 @@ public class Main_Window extends javax.swing.JFrame {
     Matriz base1Input;
     Matriz base2Input;
     Matriz matrizCambioBase;
+    double[] vector;
+    int baseOrigen;
     
     /**
      * Creates new form Main_Window
@@ -37,6 +40,8 @@ public class Main_Window extends javax.swing.JFrame {
         base1Input = new Matriz();
         base2Input = new Matriz();
         matrizCambioBase = new Matriz();
+        vector = new double[3];
+        baseOrigen = 1;
     }
 
     /**
@@ -65,6 +70,10 @@ public class Main_Window extends javax.swing.JFrame {
         btnCalcularMatrizCambioBase = new javax.swing.JButton();
         jScrollPane2 = new javax.swing.JScrollPane();
         txtaMatrizCambioBase = new javax.swing.JTextArea();
+        lblCombinacionL = new javax.swing.JLabel();
+        jScrollPane3 = new javax.swing.JScrollPane();
+        txtaMatrizCambioBase1 = new javax.swing.JTextArea();
+        btnCalcComb = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -76,7 +85,7 @@ public class Main_Window extends javax.swing.JFrame {
         lblVectorSelect.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
         lblVectorSelect.setText("Vector:");
 
-        cmbVectorSelect.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "V1", "V2", "V3" }));
+        cmbVectorSelect.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "V1", "V2", "V3", "Vector u" }));
 
         txtfElem1.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyTyped(java.awt.event.KeyEvent evt) {
@@ -130,17 +139,41 @@ public class Main_Window extends javax.swing.JFrame {
                 btnCalcularMatrizCambioBaseMouseClicked(evt);
             }
         });
+        btnCalcularMatrizCambioBase.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnCalcularMatrizCambioBaseActionPerformed(evt);
+            }
+        });
 
         txtaMatrizCambioBase.setColumns(20);
         txtaMatrizCambioBase.setRows(5);
         jScrollPane2.setViewportView(txtaMatrizCambioBase);
+
+        lblCombinacionL.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        lblCombinacionL.setText("Combinación Lineal:");
+
+        txtaMatrizCambioBase1.setColumns(20);
+        txtaMatrizCambioBase1.setRows(5);
+        jScrollPane3.setViewportView(txtaMatrizCambioBase1);
+
+        btnCalcComb.setText("Calcular");
+        btnCalcComb.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                btnCalcCombMouseClicked(evt);
+            }
+        });
+        btnCalcComb.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnCalcCombActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap(23, Short.MAX_VALUE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
                         .addGap(49, 49, 49)
@@ -166,24 +199,34 @@ public class Main_Window extends javax.swing.JFrame {
                                     .addGroup(layout.createSequentialGroup()
                                         .addComponent(lblVectorSelect)
                                         .addGap(18, 18, 18)
-                                        .addComponent(cmbVectorSelect, javax.swing.GroupLayout.PREFERRED_SIZE, 68, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                                .addGap(70, 70, 70))))
+                                        .addComponent(cmbVectorSelect, javax.swing.GroupLayout.PREFERRED_SIZE, 68, javax.swing.GroupLayout.PREFERRED_SIZE))))))
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 271, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addComponent(separator1, javax.swing.GroupLayout.PREFERRED_SIZE, 11, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(158, 158, 158)
-                        .addComponent(btnCalcularMatrizCambioBase))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(86, 86, 86)
-                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(131, 131, 131)
-                        .addComponent(lblOrigen)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(cmbOrigen, javax.swing.GroupLayout.PREFERRED_SIZE, 67, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addGap(90, 90, 90))
+                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 201, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(40, 40, 40))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(39, 39, 39)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addGroup(layout.createSequentialGroup()
+                                    .addComponent(lblCombinacionL)
+                                    .addGap(18, 18, 18)
+                                    .addComponent(btnCalcComb))
+                                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                    .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 201, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addGap(15, 15, 15)))
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(lblOrigen)
+                                .addGap(18, 18, 18)
+                                .addComponent(cmbOrigen, javax.swing.GroupLayout.PREFERRED_SIZE, 67, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(18, 18, 18)
+                                .addComponent(btnCalcularMatrizCambioBase)))
+                        .addGap(21, 21, 21))))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -195,15 +238,23 @@ public class Main_Window extends javax.swing.JFrame {
                             .addComponent(cmbBaseSelect, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(lblBase)
                             .addComponent(lblOrigen)
-                            .addComponent(cmbOrigen, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(lblVectorSelect)
-                            .addComponent(cmbVectorSelect, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(cmbOrigen, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(btnCalcularMatrizCambioBase))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGap(18, 18, 18)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
+                                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 136, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                    .addComponent(btnCalcComb)
+                                    .addComponent(lblCombinacionL))
+                                .addGap(18, 18, 18)
+                                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 165, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(layout.createSequentialGroup()
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                    .addComponent(lblVectorSelect)
+                                    .addComponent(cmbVectorSelect, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                                     .addComponent(txtfElem1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addComponent(txtfElem2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -213,9 +264,8 @@ public class Main_Window extends javax.swing.JFrame {
                                     .addComponent(btnAgregarVector, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                     .addComponent(lblIcon, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE))
                                 .addGap(18, 18, 18)
-                                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 316, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 126, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(0, 16, Short.MAX_VALUE))
+                                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 236, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGap(0, 0, Short.MAX_VALUE))
                     .addGroup(layout.createSequentialGroup()
                         .addContainerGap()
                         .addComponent(separator1)))
@@ -263,45 +313,58 @@ public class Main_Window extends javax.swing.JFrame {
         
         int fila = cmbVectorSelect.getSelectedIndex();
         
-        if (cmbBaseSelect.getSelectedIndex()==0)
+        if (fila!=3)
         {
-            base1Input.insertElem(fila, 0, elem1Temp);
-            base1Input.insertElem(fila, 1, elem2Temp);
-            base1Input.insertElem(fila, 2, elem3Temp);
-
-            double determinante = base1Input.determinante();
-            System.out.println(base1Input.toString());
-            System.out.println("determinante: " + determinante);
-            if (determinante != 0)
+            if (cmbBaseSelect.getSelectedIndex()==0)
             {
-                Icon icon = new ImageIcon("src\\good.png");
-                lblIcon.setIcon(icon);
+                base1Input.insertElem(fila, 0, elem1Temp);
+                base1Input.insertElem(fila, 1, elem2Temp);
+                base1Input.insertElem(fila, 2, elem3Temp);
+
+                double determinante = base1Input.determinante();
+                //System.out.println(base1Input.toString());
+                //System.out.println("determinante: " + determinante);
+                if (determinante != 0)
+                {
+                    Icon icon = new ImageIcon("src\\good.png");
+                    lblIcon.setIcon(icon);
+                    base1Input.setBase(true);
+                }
+                else
+                {
+                    Icon icon = new ImageIcon("src\\bad.png");
+                    lblIcon.setIcon(icon);
+                    base1Input.setBase(false);
+                }
             }
             else
             {
-                Icon icon = new ImageIcon("src\\bad.png");
-                lblIcon.setIcon(icon);
+                base2Input.insertElem(fila, 0, elem1Temp);
+                base2Input.insertElem(fila, 1, elem2Temp);
+                base2Input.insertElem(fila, 2, elem3Temp);
+
+                double determinante = base2Input.determinante();
+                //System.out.println(base2Input.toString());
+                //System.out.println("determinante: " + determinante);
+                if (determinante != 0)
+                {
+                    Icon icon = new ImageIcon("src\\good.png");
+                    lblIcon.setIcon(icon);
+                    base2Input.setBase(true);
+                }
+                else
+                {
+                    Icon icon = new ImageIcon("src\\bad.png");
+                    lblIcon.setIcon(icon);
+                    base2Input.setBase(false);
+                }
             }
         }
         else
         {
-            base2Input.insertElem(fila, 0, elem1Temp);
-            base2Input.insertElem(fila, 1, elem2Temp);
-            base2Input.insertElem(fila, 2, elem3Temp);
-
-            double determinante = base2Input.determinante();
-            System.out.println(base2Input.toString());
-            System.out.println("determinante: " + determinante);
-            if (determinante != 0)
-            {
-                Icon icon = new ImageIcon("src\\good.png");
-                lblIcon.setIcon(icon);
-            }
-            else
-            {
-                Icon icon = new ImageIcon("src\\bad.png");
-                lblIcon.setIcon(icon);
-            }
+            vector[0] = Double.parseDouble(txtfElem1.getText());
+            vector[1] = Double.parseDouble(txtfElem2.getText());
+            vector[2] = Double.parseDouble(txtfElem3.getText());                    
         }
         
         txtaBaseDisplay.setText(base1Input.toString() + "\n\n" + base2Input.toString());
@@ -309,51 +372,95 @@ public class Main_Window extends javax.swing.JFrame {
 
     private void btnCalcularMatrizCambioBaseMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnCalcularMatrizCambioBaseMouseClicked
         // TODO add your handling code here:
-        try
+        double[] vectorTemp;
+        double[] vectorSol;
+        if (cmbOrigen.getSelectedIndex()==0 && base2Input.isBase())
         {
-            double[] vectorTemp;
-            double[] vectorSol;
-            if (cmbOrigen.getSelectedIndex()==0)
+            baseOrigen = 1;
+            for (int i = 0; i < base1Input.getSize(); i++) 
             {
-                for (int i = 0; i < base1Input.getSize(); i++) 
+                vectorTemp = base1Input.getFila(i);
+                vectorSol = OpMatricial.Crammer(base2Input, vectorTemp, base2Input.determinante());
+                //System.out.println("Matriz: \n" + base2Input.toString() +
+                //    "VectorSol: \n" + Arrays.toString(vectorSol) + "\n");
+                for (int j = 0; j < vectorSol.length; j++)
                 {
-                    vectorTemp = base1Input.getFila(i);
-                    vectorSol = OpMatricial.Crammer(base2Input, vectorTemp, base2Input.determinante());
-                    System.out.println("Matriz: \n" + base2Input.toString() +
-                        "VectorSol: \n" + Arrays.toString(vectorSol) + "\n");
-                    for (int j = 0; j < vectorSol.length; j++)
-                    {
-                        matrizCambioBase.insertElem(i, j, vectorSol[j]);
-                    }
+                    matrizCambioBase.insertElem(i, j, vectorSol[j]);
                 }
             }
-            
-            if (cmbOrigen.getSelectedIndex()==1)
-            {
-                for (int i = 0; i < base2Input.getSize(); i++) 
-                {
-                    vectorTemp = base2Input.getFila(i);
-                    vectorSol = OpMatricial.Crammer(base1Input, vectorTemp, base1Input.determinante());
-                    System.out.println("Matriz: \n" + base1Input.toString() +
-                        "VectorSol: \n" + Arrays.toString(vectorSol) + "\n");
-                    for (int j = 0; j < vectorSol.length; j++)
-                    {
-                        matrizCambioBase.insertElem(i, j, vectorSol[j]);
-                    }
-                }
-            }
-
-            txtaMatrizCambioBase.setText(matrizCambioBase.toString());
         }
-        catch (ArithmeticException e)
+
+        if (cmbOrigen.getSelectedIndex()==1 && base1Input.isBase())
+        {
+            baseOrigen = 2;
+            for (int i = 0; i < base2Input.getSize(); i++) 
+            {
+                vectorTemp = base2Input.getFila(i);
+                vectorSol = OpMatricial.Crammer(base1Input, vectorTemp, base1Input.determinante());
+                //System.out.println("Matriz: \n" + base1Input.toString() +
+                //    "VectorSol: \n" + Arrays.toString(vectorSol) + "\n");
+                for (int j = 0; j < vectorSol.length; j++)
+                {
+                    matrizCambioBase.insertElem(i, j, vectorSol[j]);
+                }
+            }
+        }
+
+        else
         {
             JOptionPane.showMessageDialog(this, "Error, el determinante de la base es 0", "Error!", ERROR);
         }
+        
+        txtaMatrizCambioBase.setText(matrizCambioBase.toString());
+        
     }//GEN-LAST:event_btnCalcularMatrizCambioBaseMouseClicked
 
     private void cmbOrigenItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cmbOrigenItemStateChanged
         // TODO add your handling code here:
     }//GEN-LAST:event_cmbOrigenItemStateChanged
+
+    private void btnCalcCombActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCalcCombActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_btnCalcCombActionPerformed
+
+    private void btnCalcularMatrizCambioBaseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCalcularMatrizCambioBaseActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_btnCalcularMatrizCambioBaseActionPerformed
+
+    private void btnCalcCombMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnCalcCombMouseClicked
+        // TODO add your handling code here:
+        if (matrizCambioBase.determinante()!=0)
+        {
+            double[][] inversa = matrizInversa(matrizCambioBase.getMatriz());
+            double[] result = OpMatricial.multiplicarMatriz(new Matriz(inversa), vector);
+            String exp = "";
+            for(int i=0 ; i< result.length ; i++)
+            {
+                if (!"".equals(exp))
+                {
+                    exp=exp.substring(0, exp.length()-1) + ")+" + result[i]+"+(";
+                }
+                else
+                    exp+=result[i]+"+(";
+                if (baseOrigen==1)
+                {
+                    for (double elem : base1Input.getFila(i)) 
+                    {
+                        exp += elem+",";
+                    }
+                }
+                if (baseOrigen==2)
+                {
+                    for (double elem : base2Input.getFila(i)) 
+                    {
+                        exp += elem+",";
+                    }
+                }
+            }
+            exp=exp.substring(0, exp.length()-1) + ")";
+            txtaMatrizCambioBase1.setText(exp);
+        }
+    }//GEN-LAST:event_btnCalcCombMouseClicked
 
     /**
      * @param args the command line arguments
@@ -392,19 +499,23 @@ public class Main_Window extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnAgregarVector;
+    private javax.swing.JButton btnCalcComb;
     private javax.swing.JButton btnCalcularMatrizCambioBase;
     private javax.swing.JComboBox<String> cmbBaseSelect;
     private javax.swing.JComboBox<String> cmbOrigen;
     private javax.swing.JComboBox<String> cmbVectorSelect;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JLabel lblBase;
+    private javax.swing.JLabel lblCombinacionL;
     private javax.swing.JLabel lblIcon;
     private javax.swing.JLabel lblOrigen;
     private javax.swing.JLabel lblVectorSelect;
     private javax.swing.JSeparator separator1;
     private javax.swing.JTextArea txtaBaseDisplay;
     private javax.swing.JTextArea txtaMatrizCambioBase;
+    private javax.swing.JTextArea txtaMatrizCambioBase1;
     private javax.swing.JTextField txtfElem1;
     private javax.swing.JTextField txtfElem2;
     private javax.swing.JTextField txtfElem3;

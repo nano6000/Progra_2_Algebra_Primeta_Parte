@@ -5,7 +5,13 @@
  */
 package Capa_Logica;
 
+import static Capa_Logica.Inversa.determinante;
+import static Capa_Logica.Inversa.matrizCofactores;
+import static Capa_Logica.Inversa.matrizCofactores2;
+import static Capa_Logica.Inversa.matrizTranspuesta;
 import java.util.Arrays;
+
+
 
 /**
  *
@@ -13,7 +19,8 @@ import java.util.Arrays;
  */
 public class Matriz {
     
-    double[][] matriz;
+    private double[][] matriz;
+    private boolean base;
 
     public Matriz(int i, int j) {
         this.matriz = new double[i][j];
@@ -21,6 +28,11 @@ public class Matriz {
     
     public Matriz(int i) {
         this.matriz = new double[i][i];
+    }
+    
+    public Matriz(double[][] matriz)
+    {
+        this.matriz = matriz;
     }
     
     /***
@@ -34,7 +46,21 @@ public class Matriz {
     {
         this.matriz[i][j] = elem;
     }
+    
+    public void setBase(boolean base)
+    {
+        this.base = base;
+    }
+    
+    public boolean isBase()
+    {
+        return base;
+    }
 
+    public double[][] getMatriz()
+    {
+        return matriz;
+    }
     @Override
     public String toString() 
     {
@@ -48,6 +74,11 @@ public class Matriz {
     public double[] getFila(int i)
     {
         return matriz[i];
+    }
+    
+    public double getElement(int i, int j)
+    {
+        return matriz[i][j];
     }
     
     public int getSize()
@@ -157,6 +188,5 @@ public class Matriz {
         //printMatriz(subArr);
         return subArr;
     }
-    
     
 }
